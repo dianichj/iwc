@@ -1,0 +1,514 @@
+{
+    "name": "Velocyto-on10X-from-bundled",
+    "subclass": "Galaxy",
+    "publish": true,
+    "primaryDescriptorPath": "/Velocyto-on10X-from-bundled.ga",
+    "testParameterFiles": [
+        "/Velocyto-on10X-from-bundled-tests.yml"
+    ],
+    "authors": [
+        {
+            "name": "Lucille Delisle",
+            "orcid": "0000-0002-1964-4960"
+        }
+    ],
+    "definition": {
+        "a_galaxy_workflow": "true",
+        "annotation": "Processes 10X Genomics single-cell RNA-seq data using Velocyto to quantify spliced and unspliced transcript counts for RNA velocity analysis. Automatically extracts cell barcodes from standard 10X bundled output and generates a loom file containing separate counts for spliced exons, unspliced introns, and ambiguous regions. Enables downstream trajectory inference and cellular dynamics analysis.",
+        "comments": [],
+        "creator": [
+            {
+                "class": "Person",
+                "identifier": "https://orcid.org/0000-0002-1964-4960",
+                "name": "Lucille Delisle"
+            }
+        ],
+        "format-version": "0.1",
+        "license": "MIT",
+        "name": "RNA Velocity Analysis: Velocyto for 10X Data from Bundled Output",
+        "steps": {
+            "0": {
+                "annotation": "This can be output of CellRanger or STARsolo",
+                "content_id": null,
+                "errors": null,
+                "id": 0,
+                "input_connections": {},
+                "inputs": [
+                    {
+                        "description": "This can be output of CellRanger or STARsolo",
+                        "name": "BAM files with CB and UB"
+                    }
+                ],
+                "label": "BAM files with CB and UB",
+                "name": "Input dataset collection",
+                "outputs": [],
+                "position": {
+                    "left": 0,
+                    "top": 0
+                },
+                "tool_id": null,
+                "tool_state": "{\"optional\": false, \"format\": [\"bam\"], \"tag\": \"\", \"collection_type\": \"list\", \"fields\": null}",
+                "tool_version": null,
+                "type": "data_collection_input",
+                "uuid": "043d198b-3af0-477d-be11-5d1373280379",
+                "when": null,
+                "workflow_outputs": []
+            },
+            "1": {
+                "annotation": "This can be output of STARsolo or DropletUtils",
+                "content_id": null,
+                "errors": null,
+                "id": 1,
+                "input_connections": {},
+                "inputs": [
+                    {
+                        "description": "This can be output of STARsolo or DropletUtils",
+                        "name": "filtered matrices in bundle"
+                    }
+                ],
+                "label": "filtered matrices in bundle",
+                "name": "Input dataset collection",
+                "outputs": [],
+                "position": {
+                    "left": 141,
+                    "top": 139
+                },
+                "tool_id": null,
+                "tool_state": "{\"optional\": false, \"tag\": \"\", \"collection_type\": \"list\", \"fields\": null}",
+                "tool_version": null,
+                "type": "data_collection_input",
+                "uuid": "03b0d22c-3b46-4460-8c18-b524bc09d655",
+                "when": null,
+                "workflow_outputs": []
+            },
+            "2": {
+                "annotation": "gtf file",
+                "content_id": null,
+                "errors": null,
+                "id": 2,
+                "input_connections": {},
+                "inputs": [
+                    {
+                        "description": "gtf file",
+                        "name": "gtf file"
+                    }
+                ],
+                "label": "gtf file",
+                "name": "Input dataset",
+                "outputs": [],
+                "position": {
+                    "left": 231,
+                    "top": 273
+                },
+                "tool_id": null,
+                "tool_state": "{\"optional\": false, \"format\": [\"gtf\"], \"tag\": \"\"}",
+                "tool_version": null,
+                "type": "data_input",
+                "uuid": "f1d04259-f449-44d7-8d36-49f3ad664361",
+                "when": null,
+                "workflow_outputs": []
+            },
+            "3": {
+                "annotation": "",
+                "content_id": "__APPLY_RULES__",
+                "errors": null,
+                "id": 3,
+                "input_connections": {
+                    "input": {
+                        "id": 1,
+                        "output_name": "output"
+                    }
+                },
+                "inputs": [],
+                "label": "extract barcodes from bundle",
+                "name": "Apply rules",
+                "outputs": [
+                    {
+                        "name": "output",
+                        "type": "input"
+                    }
+                ],
+                "position": {
+                    "left": 421,
+                    "top": 133
+                },
+                "post_job_actions": {
+                    "HideDatasetActionoutput": {
+                        "action_arguments": {},
+                        "action_type": "HideDatasetAction",
+                        "output_name": "output"
+                    }
+                },
+                "tool_id": "__APPLY_RULES__",
+                "tool_state": "{\"input\": {\"__class__\": \"ConnectedValue\"}, \"rules\": {\"mapping\": [{\"columns\": [0], \"editing\": false, \"type\": \"list_identifiers\"}], \"rules\": [{\"error\": null, \"type\": \"add_column_metadata\", \"value\": \"identifier0\", \"warn\": null}, {\"error\": null, \"type\": \"add_column_metadata\", \"value\": \"identifier1\", \"warn\": null}, {\"error\": null, \"invert\": false, \"target_column\": 1, \"type\": \"add_filter_matches\", \"value\": \"barcodes\", \"warn\": null}]}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+                "tool_version": "1.1.0",
+                "type": "tool",
+                "uuid": "8c2d032f-596c-4315-8361-ebf1ec2eb655",
+                "when": null,
+                "workflow_outputs": []
+            },
+            "4": {
+                "annotation": "",
+                "id": 4,
+                "input_connections": {
+                    "BAM files with CB and UB": {
+                        "id": 0,
+                        "input_subworkflow_step_id": 0,
+                        "output_name": "output"
+                    },
+                    "filtered barcodes": {
+                        "id": 3,
+                        "input_subworkflow_step_id": 1,
+                        "output_name": "output"
+                    },
+                    "gtf file": {
+                        "id": 2,
+                        "input_subworkflow_step_id": 2,
+                        "output_name": "output"
+                    }
+                },
+                "inputs": [],
+                "label": null,
+                "name": "Velocyto_on10X_filtered_barcodes",
+                "outputs": [],
+                "position": {
+                    "left": 710,
+                    "top": 63.5
+                },
+                "subworkflow": {
+                    "a_galaxy_workflow": "true",
+                    "annotation": "",
+                    "comments": [],
+                    "creator": [
+                        {
+                            "class": "Person",
+                            "identifier": "https://orcid.org/0000-0002-1964-4960",
+                            "name": "Lucille Delisle"
+                        }
+                    ],
+                    "format-version": "0.1",
+                    "license": "MIT",
+                    "name": "Velocyto_on10X_filtered_barcodes",
+                    "steps": {
+                        "0": {
+                            "annotation": "This can be output of CellRanger or STARsolo",
+                            "content_id": null,
+                            "errors": null,
+                            "id": 0,
+                            "input_connections": {},
+                            "inputs": [
+                                {
+                                    "description": "This can be output of CellRanger or STARsolo",
+                                    "name": "BAM files with CB and UB"
+                                }
+                            ],
+                            "label": "BAM files with CB and UB",
+                            "name": "Input dataset collection",
+                            "outputs": [],
+                            "position": {
+                                "left": 0.0,
+                                "top": 0.0
+                            },
+                            "tool_id": null,
+                            "tool_state": "{\"optional\": false, \"format\": [\"bam\"], \"tag\": \"\", \"collection_type\": \"list\", \"fields\": null}",
+                            "tool_version": null,
+                            "type": "data_collection_input",
+                            "uuid": "043d198b-3af0-477d-be11-5d1373280379",
+                            "when": null,
+                            "workflow_outputs": []
+                        },
+                        "1": {
+                            "annotation": "This can be output of STARsolo or DropletUtils",
+                            "content_id": null,
+                            "errors": null,
+                            "id": 1,
+                            "input_connections": {},
+                            "inputs": [
+                                {
+                                    "description": "This can be output of STARsolo or DropletUtils",
+                                    "name": "filtered barcodes"
+                                }
+                            ],
+                            "label": "filtered barcodes",
+                            "name": "Input dataset collection",
+                            "outputs": [],
+                            "position": {
+                                "left": 55.999999999999986,
+                                "top": 108.33333333333333
+                            },
+                            "tool_id": null,
+                            "tool_state": "{\"optional\": false, \"format\": [\"tsv\"], \"tag\": \"\", \"collection_type\": \"list\", \"fields\": null}",
+                            "tool_version": null,
+                            "type": "data_collection_input",
+                            "uuid": "03b0d22c-3b46-4460-8c18-b524bc09d655",
+                            "when": null,
+                            "workflow_outputs": []
+                        },
+                        "2": {
+                            "annotation": "gtf file",
+                            "content_id": null,
+                            "errors": null,
+                            "id": 2,
+                            "input_connections": {},
+                            "inputs": [
+                                {
+                                    "description": "gtf file",
+                                    "name": "gtf file"
+                                }
+                            ],
+                            "label": "gtf file",
+                            "name": "Input dataset",
+                            "outputs": [],
+                            "position": {
+                                "left": 148.0,
+                                "top": 204.66666666666666
+                            },
+                            "tool_id": null,
+                            "tool_state": "{\"optional\": false, \"format\": [\"gtf\"], \"tag\": \"\"}",
+                            "tool_version": null,
+                            "type": "data_input",
+                            "uuid": "f1d04259-f449-44d7-8d36-49f3ad664361",
+                            "when": null,
+                            "workflow_outputs": []
+                        },
+                        "3": {
+                            "annotation": "",
+                            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy3",
+                            "errors": null,
+                            "id": 3,
+                            "input_connections": {
+                                "main|BAM": {
+                                    "id": 0,
+                                    "output_name": "output"
+                                },
+                                "main|barcodes": {
+                                    "id": 1,
+                                    "output_name": "output"
+                                },
+                                "main|gtffile": {
+                                    "id": 2,
+                                    "output_name": "output"
+                                }
+                            },
+                            "inputs": [
+                                {
+                                    "description": "runtime parameter for tool velocyto CLI",
+                                    "name": "main"
+                                },
+                                {
+                                    "description": "runtime parameter for tool velocyto CLI",
+                                    "name": "main"
+                                },
+                                {
+                                    "description": "runtime parameter for tool velocyto CLI",
+                                    "name": "main"
+                                },
+                                {
+                                    "description": "runtime parameter for tool velocyto CLI",
+                                    "name": "main"
+                                },
+                                {
+                                    "description": "runtime parameter for tool velocyto CLI",
+                                    "name": "main"
+                                }
+                            ],
+                            "label": "velocyto",
+                            "name": "velocyto CLI",
+                            "outputs": [
+                                {
+                                    "name": "samples",
+                                    "type": "loom"
+                                }
+                            ],
+                            "position": {
+                                "left": 470.66666666666663,
+                                "top": 116.32222493489576
+                            },
+                            "post_job_actions": {},
+                            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy3",
+                            "tool_shed_repository": {
+                                "changeset_revision": "f66590d0d3af",
+                                "name": "velocyto_cli",
+                                "owner": "iuc",
+                                "tool_shed": "toolshed.g2.bx.psu.edu"
+                            },
+                            "tool_state": "{\"main\": {\"do\": \"run10x\", \"__current_case__\": 0, \"sample_definition\": {\"sample_definition_select\": \"identifier\", \"__current_case__\": 1}, \"BAM\": {\"__class__\": \"ConnectedValue\"}, \"barcodes\": {\"__class__\": \"ConnectedValue\"}, \"gtffile\": {\"__class__\": \"ConnectedValue\"}, \"s\": {\"__class__\": \"RuntimeValue\"}, \"m\": {\"__class__\": \"RuntimeValue\"}, \"M\": false, \"t\": \"uint16\"}, \"verbosity\": \"-vv\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+                            "tool_version": "0.17.17+galaxy3",
+                            "type": "tool",
+                            "uuid": "f9aef50f-b31d-44dd-aad6-fe4d520e3b1e",
+                            "when": null,
+                            "workflow_outputs": [
+                                {
+                                    "label": "velocyto loom",
+                                    "output_name": "samples",
+                                    "uuid": "2899a85c-c198-436f-a409-9bfbdf90c95f"
+                                }
+                            ]
+                        }
+                    },
+                    "tags": [],
+                    "uuid": "706bae3e-e38f-402f-acaa-d2e9f43a18e9"
+                },
+                "tool_id": null,
+                "type": "subworkflow",
+                "uuid": "39ea418d-135d-4e7d-b2fe-fbde5c7393b7",
+                "when": null,
+                "workflow_outputs": [
+                    {
+                        "label": "velocyto loom",
+                        "output_name": "velocyto loom",
+                        "uuid": "865e6dd6-8c01-4188-a1f6-4cd77e433eed"
+                    }
+                ]
+            }
+        },
+        "tags": [
+            "name:single-cell"
+        ],
+        "uuid": "713dc9d4-d0c0-4bb0-9a55-ee1767515690",
+        "version": 1,
+        "release": "0.3"
+    },
+    "workflow_job_input": {
+        "BAM files with CB and UB": {
+            "class": "Collection",
+            "collection_type": "list",
+            "elements": [
+                {
+                    "class": "File",
+                    "identifier": "todo_element_name",
+                    "path": "todo_test_data_path.ext"
+                }
+            ]
+        },
+        "filtered matrices in bundle": {
+            "class": "Collection",
+            "collection_type": "list",
+            "elements": [
+                {
+                    "class": "File",
+                    "identifier": "todo_element_name",
+                    "path": "todo_test_data_path.ext"
+                }
+            ]
+        },
+        "gtf file": {
+            "class": "File",
+            "path": "todo_test_data_path.ext"
+        }
+    },
+    "readme": "# RNA Velocity Analysis: Velocyto for 10X Genomics Data\n\nThese workflows simply run velocyto. There are 2 workflows because one can be easily run after the Single-Cell RNA-seq Preprocessing: 10X Genomics v3 to Seurat-Compatible Format' workflows (RNA Velocity Analysis: Velocyto for 10X Data from Bundled Output). The other can be easily run from uploaded datasets (RNA Velocity Analysis: Velocyto for 10X Data with Filtered Barcodes).\n\n## Input datasets\n\n- BAM files with CB and UB: A collection of BAM. It accepts BAM from cellranger or STARsolo with the CB and UB tags (if you use the fastq-to-matrix-10x workflows these tags are automatically included).\n- filtered barcodes (only for Velocyto_on10X_filtered_barcodes workflow): A collection of filtered barcodes (this is what will be used by velocyto). 'Filtered' means that these barcodes have been identified as potential cells. It should not be the whole list of 3 million possible barcodes from cellranger.\n- filtered matrices in bundle (only for Velocyto_on10X_from_bundled workflow): A collection of filtered matrices as bundled (like the one which comes from the fastq-to-matrix-10x workflows): A collection with as many items as samples. For each sample, the item is a list with 3 datasets (barcodes, genes, matrix). The workflow will then extract the items which have the 'barcodes' identifier.\n- gtf file: A file with annotations where exons are and how they are grouped into genes.\n\n## Processing\n\n- If you provided matrices, the first step is to extract barcodes.\n- For both cases velocyto cli is run to get a loom file per sample with spliced and unspliced counts.\n",
+    "changelog": "# Changelog\n\n## [0.3] - 2025-10-08\n\n### Automatic update\n- `toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy2` was updated to `toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy3`\n\n## [0.2] - 2024-02-05\n\n### Automatic update\n- `toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy1` was updated to `toolshed.g2.bx.psu.edu/repos/iuc/velocyto_cli/velocyto_cli/0.17.17+galaxy2`\n## [0.1] - 2024-01-26\n\nFirst release.\n",
+    "diagrams": "# Workflow diagrams\n\n## RNA Velocity Analysis: Velocyto for 10X Data from Bundled Output\n\n```mermaid\ngraph LR\n0[\"\u2139\ufe0f BAM files with CB and UB\"]@{ shape: docs }\n1[\"\u2139\ufe0f filtered matrices in bundle\"]@{ shape: docs }\n2[\"\u2139\ufe0f gtf file\"]@{ shape: doc }\n3[\"extract barcodes from bundle\"]@{ shape: process }\n1 --> 3\n4[\"\ud83d\udee0\ufe0f Velocyto_on10X_filtered_barcodes\"]@{ shape: subprocess }\n0 --> 4\n3 --> 4\n2 --> 4\n```\n\n## Velocyto_on10X_filtered_barcodes\n\n```mermaid\ngraph LR\n0[\"\u2139\ufe0f BAM files with CB and UB\"]@{ shape: docs }\n1[\"\u2139\ufe0f filtered barcodes\"]@{ shape: docs }\n2[\"\u2139\ufe0f gtf file\"]@{ shape: doc }\n3[\"velocyto\"]@{ shape: process }\n0 --> 3\n1 --> 3\n2 --> 3\n```\n",
+    "diagram_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 450\" role=\"img\" aria-label=\"Velocyto on 10X from bundled output workflow diagram\">\n  <title>RNA Velocity Analysis: Velocyto for 10X Data from Bundled Output</title>\n  <desc>Extracts barcodes from standard 10X bundled matrix output, then runs Velocyto to generate spliced/unspliced count loom files for RNA velocity analysis.</desc>\n\n  <defs>\n    <pattern id=\"grid\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\">\n      <path d=\"M 20 0 L 0 0 0 20\" fill=\"none\" stroke=\"#c5d5e4\" stroke-width=\"0.5\"/>\n    </pattern>\n    <pattern id=\"grid-major\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\">\n      <rect width=\"100\" height=\"100\" fill=\"url(#grid)\"/>\n      <path d=\"M 100 0 L 0 0 0 100\" fill=\"none\" stroke=\"#b0c4d8\" stroke-width=\"1\"/>\n    </pattern>\n    <style>\n      .connection { stroke: #25537b; stroke-width: 4; fill: none; stroke-linecap: round; }\n      .connection-qc { stroke: #25537b; stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 5 3; }\n      .connection-secondary { stroke: #25537b; stroke-width: 3; fill: none; stroke-linecap: round; }\n      .node-card { filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.15)); }\n    </style>\n  </defs>\n\n  <rect width=\"900\" height=\"450\" fill=\"#f8f9fa\"/>\n  <rect width=\"900\" height=\"450\" fill=\"url(#grid-major)\"/>\n  <rect x=\"0\" y=\"0\" width=\"900\" height=\"45\" fill=\"#25537b\"/>\n  <text x=\"20\" y=\"28\" font-family=\"system-ui, sans-serif\" font-size=\"16\" font-weight=\"600\" fill=\"white\">Velocyto: RNA Velocity from 10X Bundled Output</text>\n\n  <!-- CONNECTIONS -->\n  <!-- BAM -> Velocyto subworkflow -->\n  <path class=\"connection\" d=\"M 180 115 C 310 115, 420 135, 560 135\"/>\n  <!-- Bundled matrices -> Extract barcodes -->\n  <path class=\"connection\" d=\"M 180 215 C 240 215, 270 215, 310 215\"/>\n  <!-- Extract barcodes -> Velocyto subworkflow -->\n  <path class=\"connection\" d=\"M 510 215 C 530 215, 540 165, 560 165\"/>\n  <!-- GTF -> Velocyto subworkflow -->\n  <path class=\"connection\" d=\"M 180 315 C 340 315, 450 185, 560 185\"/>\n  <!-- Velocyto subworkflow -> Loom output -->\n  <path class=\"connection\" d=\"M 760 160 C 790 160, 790 165, 810 165\"/>\n\n  <!-- INPUT NODES -->\n  <!-- BAM files -->\n  <g class=\"node-card\" transform=\"translate(0,75)\">\n    <rect width=\"180\" height=\"90\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"180\" height=\"28\" rx=\"4\" fill=\"#ffd700\"/>\n    <rect x=\"0\" y=\"14\" width=\"180\" height=\"14\" fill=\"#ffd700\"/>\n    <text x=\"90\" y=\"18\" font-family=\"system-ui, sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"#2C3143\" text-anchor=\"middle\">BAM Files</text>\n    <text x=\"90\" y=\"55\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">Aligned reads with</text>\n    <text x=\"90\" y=\"67\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">CB and UB tags</text>\n    <circle cx=\"180\" cy=\"45\" r=\"6\" fill=\"#ffd700\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- Filtered matrices bundle -->\n  <g class=\"node-card\" transform=\"translate(0,175)\">\n    <rect width=\"180\" height=\"90\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"180\" height=\"28\" rx=\"4\" fill=\"#ffd700\"/>\n    <rect x=\"0\" y=\"14\" width=\"180\" height=\"14\" fill=\"#ffd700\"/>\n    <text x=\"90\" y=\"18\" font-family=\"system-ui, sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"#2C3143\" text-anchor=\"middle\">Filtered Matrices</text>\n    <text x=\"90\" y=\"55\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">10X bundled output</text>\n    <text x=\"90\" y=\"67\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">(genes, barcodes, mtx)</text>\n    <circle cx=\"180\" cy=\"45\" r=\"6\" fill=\"#ffd700\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- GTF -->\n  <g class=\"node-card\" transform=\"translate(0,275)\">\n    <rect width=\"180\" height=\"90\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"180\" height=\"28\" rx=\"4\" fill=\"#ffd700\"/>\n    <rect x=\"0\" y=\"14\" width=\"180\" height=\"14\" fill=\"#ffd700\"/>\n    <text x=\"90\" y=\"18\" font-family=\"system-ui, sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"#2C3143\" text-anchor=\"middle\">GTF File</text>\n    <text x=\"90\" y=\"55\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">Gene annotation</text>\n    <text x=\"90\" y=\"67\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">for exon/intron</text>\n    <circle cx=\"180\" cy=\"45\" r=\"6\" fill=\"#ffd700\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- PROCESSING NODES -->\n  <!-- Extract barcodes -->\n  <g class=\"node-card\" transform=\"translate(310,175)\">\n    <rect width=\"200\" height=\"90\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"200\" height=\"28\" rx=\"4\" fill=\"#25537b\"/>\n    <rect x=\"0\" y=\"14\" width=\"200\" height=\"14\" fill=\"#25537b\"/>\n    <text x=\"100\" y=\"18\" font-family=\"system-ui, sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"white\" text-anchor=\"middle\">Extract Barcodes</text>\n    <text x=\"100\" y=\"55\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">Filter barcode files</text>\n    <text x=\"100\" y=\"67\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">from bundled matrices</text>\n    <circle cx=\"0\" cy=\"45\" r=\"6\" fill=\"#25537b\" stroke=\"white\" stroke-width=\"2\"/>\n    <circle cx=\"200\" cy=\"45\" r=\"6\" fill=\"#25537b\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- Velocyto (subworkflow) -->\n  <g class=\"node-card\" transform=\"translate(560,110)\">\n    <rect width=\"200\" height=\"100\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"200\" height=\"28\" rx=\"4\" fill=\"#25537b\"/>\n    <rect x=\"0\" y=\"14\" width=\"200\" height=\"14\" fill=\"#25537b\"/>\n    <text x=\"100\" y=\"18\" font-family=\"system-ui, sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"white\" text-anchor=\"middle\">Velocyto CLI</text>\n    <text x=\"100\" y=\"55\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">Count spliced, unspliced,</text>\n    <text x=\"100\" y=\"67\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#868e96\" text-anchor=\"middle\">and ambiguous transcripts</text>\n    <text x=\"100\" y=\"85\" font-family=\"system-ui, sans-serif\" font-size=\"8\" fill=\"#b0c4d8\" text-anchor=\"middle\">(subworkflow)</text>\n    <circle cx=\"0\" cy=\"50\" r=\"6\" fill=\"#25537b\" stroke=\"white\" stroke-width=\"2\"/>\n    <circle cx=\"200\" cy=\"50\" r=\"6\" fill=\"#25537b\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- OUTPUT NODE -->\n  <!-- Loom file -->\n  <g class=\"node-card\" transform=\"translate(810,140)\">\n    <rect width=\"80\" height=\"60\" rx=\"4\" fill=\"white\" stroke=\"#e9ecef\" stroke-width=\"1\"/>\n    <rect width=\"80\" height=\"22\" rx=\"4\" fill=\"#f97316\"/>\n    <rect x=\"0\" y=\"11\" width=\"80\" height=\"11\" fill=\"#f97316\"/>\n    <text x=\"40\" y=\"15\" font-family=\"system-ui, sans-serif\" font-size=\"8\" font-weight=\"600\" fill=\"white\" text-anchor=\"middle\">Loom Files</text>\n    <text x=\"40\" y=\"40\" font-family=\"system-ui, sans-serif\" font-size=\"7\" fill=\"#868e96\" text-anchor=\"middle\">Spliced/unspliced</text>\n    <text x=\"40\" y=\"50\" font-family=\"system-ui, sans-serif\" font-size=\"7\" fill=\"#868e96\" text-anchor=\"middle\">for scVelo</text>\n    <circle cx=\"0\" cy=\"30\" r=\"6\" fill=\"#f97316\" stroke=\"white\" stroke-width=\"2\"/>\n  </g>\n\n  <!-- LEGEND -->\n  <g transform=\"translate(20,415)\">\n    <rect x=\"0\" y=\"0\" width=\"8\" height=\"8\" rx=\"2\" fill=\"#ffd700\"/>\n    <text x=\"14\" y=\"8\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#495057\">Input</text>\n    <line x1=\"65\" y1=\"4\" x2=\"105\" y2=\"4\" stroke=\"#25537b\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    <text x=\"112\" y=\"8\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#495057\">Data flow</text>\n    <rect x=\"180\" y=\"0\" width=\"8\" height=\"8\" rx=\"2\" fill=\"#f97316\"/>\n    <text x=\"194\" y=\"8\" font-family=\"system-ui, sans-serif\" font-size=\"9\" fill=\"#495057\">Output</text>\n  </g>\n</svg>",
+    "updated": "2025-10-08T00:00:00",
+    "trsID": "#workflow/github.com/iwc-workflows/velocyto/Velocyto-on10X-from-bundled",
+    "iwcID": "velocyto-velocyto-on10x-from-bundled",
+    "repoPath": "./workflows/scRNAseq/velocyto",
+    "dockstore_id": 25201,
+    "categories": [],
+    "collections": [
+        "Single Cell"
+    ],
+    "doi": "10.5281/zenodo.15078509",
+    "tests": [
+        {
+            "doc": "Test outline for Velocyto-on10X (bundled)",
+            "job": {
+                "gtf file": {
+                    "class": "File",
+                    "location": "https://zenodo.org/record/6457007/files/Drosophila_melanogaster.BDGP6.32.109_UCSC.gtf.gz",
+                    "decompress": true,
+                    "filetype": "gtf",
+                    "hashes": [
+                        {
+                            "hash_function": "SHA-1",
+                            "hash_value": "3cbdd2f0eed28bd10af66cb83aa3f6d688779d51"
+                        }
+                    ]
+                },
+                "BAM files with CB and UB": {
+                    "class": "Collection",
+                    "collection_type": "list",
+                    "elements": [
+                        {
+                            "class": "File",
+                            "identifier": "subsample",
+                            "location": "https://zenodo.org/records/10572348/files/subsample.bam",
+                            "filetype": "bam",
+                            "hashes": [
+                                {
+                                    "hash_function": "SHA-1",
+                                    "hash_value": "0084c8b35be58ac58079ce79d7b57172602623a5"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "filtered matrices in bundle": {
+                    "class": "Collection",
+                    "collection_type": "list:list",
+                    "elements": [
+                        {
+                            "class": "Collection",
+                            "type": "list",
+                            "identifier": "subsample",
+                            "elements": [
+                                {
+                                    "class": "File",
+                                    "identifier": "barcodes",
+                                    "location": "https://zenodo.org/records/10572348/files/barcodes.tsv",
+                                    "filetype": "tsv",
+                                    "hashes": [
+                                        {
+                                            "hash_function": "SHA-1",
+                                            "hash_value": "332a0a5ac99b06315b2c946faa333c4684423b0b"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "class": "File",
+                                    "identifier": "genes",
+                                    "location": "https://zenodo.org/records/10572348/files/genes.tsv",
+                                    "filetype": "tsv",
+                                    "hashes": [
+                                        {
+                                            "hash_function": "SHA-1",
+                                            "hash_value": "0050f249ab6c35024b9c5ada8f86381ec2a16646"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "class": "File",
+                                    "identifier": "matrix",
+                                    "location": "https://zenodo.org/records/10572348/files/matrix.mtx",
+                                    "filetype": "mtx",
+                                    "hashes": [
+                                        {
+                                            "hash_function": "SHA-1",
+                                            "hash_value": "c84cc0a02031b55acbbb944a0f865af39aa3448d"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "outputs": {
+                "velocyto loom": {
+                    "element_tests": {
+                        "subsample": {
+                            "asserts": {
+                                "has_size": {
+                                    "value": 4639326,
+                                    "delta": 400000
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
